@@ -3,3 +3,22 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+:root {
+  /* Colors */
+  --Gray-900: #212121;
+  --Gray-900-60f: #21212199;
+  --Gray-900-32f: #21212152;
+  --Gray-100: #f5f5f5;
+  --Gray-100-60f: #f5f5f599;
+  --White-32f: #ffffff52;
+  --White-24f: #ffffff3d;
+  --White-8f: #ffffff14;
+  --Blue: #20233e;
+  --Indigo-400: #5c6bc0;
+  --Indigo-50: #e8eaf6;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+}
