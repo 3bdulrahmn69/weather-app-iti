@@ -466,6 +466,10 @@ aside h2 {
   .details-container {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .welcome-message {
+    padding: 16px 0;
+  }
 }
 @media (max-width: 480px) {
   .today-weather-info {
