@@ -81,6 +81,13 @@ header .search .recent {
   align-items: center;
   margin-bottom: 16px;
 }
+.search .recent .recent-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--Indigo-400) var(--White-8f);
+}
 .search .recent .recent-label {
   color: var(--Gray-900);
   font-size: 21px;
@@ -193,6 +200,8 @@ header .search .recent {
 main {
   display: flex;
   justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 main section {
   width: 70%;
@@ -201,7 +210,6 @@ main section {
   justify-content: center;
   align-items: center;
   gap: 20px;
-  padding: 20px;
 }
 main section article {
   width: 100%;
@@ -307,6 +315,12 @@ aside {
 .days7-forecast-container .day .mid p {
   color: var(--Gray-900-60f);
   font-size: 16px;
+  letter-spacing: 0.15px;
+}
+.days7-forecast-container .day .left p {
+  color: var(--Gray-900-60f);
+  font-size: 16px;
+  font-weight: 600;
   letter-spacing: 0.15px;
 }
 

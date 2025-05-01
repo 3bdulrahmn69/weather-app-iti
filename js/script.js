@@ -300,6 +300,7 @@ window.addEventListener('DOMContentLoaded', () => {
     error.classList.add('hidden');
     mainContent.classList.add('hidden');
     loading.classList.remove('hidden');
+    openCLoseRecent('close');
 
     let data = new XMLHttpRequest();
     data.open('GET', `${baseUrl}&q=${city}&days=8`, true);
@@ -382,13 +383,17 @@ window.addEventListener('DOMContentLoaded', () => {
     updateAllTemperatures();
   });
 
+  let debounceTimer;
   document.getElementById('search').addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') {
-      const city = document.getElementById('search').value.trim();
-      if (city) {
+    clearTimeout(debounceTimer); // Clear previous timer
+
+    const city = e.target.value.trim();
+
+    if (city.length >= 3) {
+      debounceTimer = setTimeout(() => {
+        console.log('searching for:', city);
         getWeatherData(city);
-        document.getElementById('search').value = '';
-      }
+      }, 1000); // 1000ms = 1 second
     }
   });
 
