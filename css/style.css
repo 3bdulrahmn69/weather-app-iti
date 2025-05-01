@@ -49,6 +49,7 @@ header .logo {
   font-weight: bold;
 }
 header .search {
+  position: relative;
   width: 70%;
 }
 header .search input[type='text'] {
@@ -60,6 +61,16 @@ header .search input[type='text'] {
   color: var(--Gray-900-60f);
   font-size: 16px;
   font-weight: 400;
+}
+header .search .recent {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--Indigo-50);
+  border-radius: 8px 8px 0 0;
+  padding: 8px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .toggle {
