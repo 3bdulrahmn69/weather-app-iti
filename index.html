@@ -1,26 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
+  <!-- Core Metadata -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather APP</title>
-  <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+  <meta name="theme-color" content="#5c6bc0">
 
-  <!-- Font import -->
+  <!-- Primary SEO -->
+  <title>Weather Forecast App | Real-time City Weather Updates</title>
+  <meta name="description"
+    content="Get accurate real-time weather forecasts and detailed climate information for cities worldwide. Hourly updates, 7-day forecasts, and comprehensive weather metrics.">
+  <meta name="keywords"
+    content="weather forecast, real-time weather, city temperature, humidity tracker, precipitation prediction, climate conditions, weather app">
+  <meta name="author" content="Abdulrahman Moussa">
+
+  <!-- Preconnect & Preload -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-    rel="stylesheet">
+  <link rel="dns-prefetch" href="//api.weatherapi.com">
 
-  <!-- CSS import -->
+  <!-- Font Loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+
+  <!-- Resource Hints -->
+  <link rel="preload" href="css/style.css" as="style">
+  <link rel="preload" href="js/script.js" as="script">
+
+  <!-- Core Styles -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://3bdulrahmn69.github.io/weather-app-iti">
+
+  <!-- Favicon Ecosystem -->
+  <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+
+  <!-- Open Graph/Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://3bdulrahmn69.github.io/weather-app-iti">
+  <meta property="og:title" content="Weather Forecast App | Real-Time City Weather Updates">
+  <meta property="og:description"
+    content="Accurate real-time weather forecasts for any city worldwide. Get hourly updates and 7-day predictions.">
+  <meta property="og:image"
+    content="https://raw.githubusercontent.com/3bdulrahmn69/weather-app-iti/4f0b2c0e1c00bd4b34fee56c5d4bb3d7f3f6ae3e/assets/images/weatherApp.png">
+  <meta property="og:site_name" content="WeatherApp">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="https://3bdulrahmn69.github.io/weather-app-itip">
+  <meta name="twitter:creator" content="Abdulrahman Moussa">
+  <meta name="twitter:title" content="Real-Time Weather Forecast App">
+  <meta name="twitter:description"
+    content="Instant weather updates for any location with detailed forecasts and climate data.">
+  <meta name="twitter:image"
+    content="https://raw.githubusercontent.com/3bdulrahmn69/weather-app-iti/4f0b2c0e1c00bd4b34fee56c5d4bb3d7f3f6ae3e/assets/images/weatherApp.png">
 </head>
 
 <body>
+  <div class="container">
+    <header role="banner">
+      <div class="logo" aria-label="Weather App Logo">
+        <img src="assets/images/logo.png" alt="Weather App Logo" width="40" height="40">
+        <span>Weather App</span>
+      </div>
+      <div class="search" role="search">
+        <input type="text" name="search" id="search" placeholder="Search for a city..."
+          aria-label="Enter city name for weather search">
+      </div>
+      <div class="toggle-container" role="group" aria-labelledby="temp-unit-label">
+        <span id="temp-unit-label" hidden>Temperature Unit Toggle</span>
+        <input type="checkbox" id="temp-toggle" class="toggle-input" role="switch" aria-checked="true" checked>
+        <label for="temp-toggle" class="toggle">
+          <span class="unit" aria-hidden="true">°F</span>
+          <span class="unit" aria-hidden="true">°C</span>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
 
+    <main class="welcome-message">
+      <section>
+        <h2>Welcome to the Weather App!</h2>
+        <p>Enter a city name to get the current weather and forecast.</p>
+      </section>
+    </main>
 
-  <script src="js/script.js"></script>
+    <main class="loading-message hidden">
+      <section class="loading-container">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <svg class="weather-icon" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,6.65C6.9,7.16 6.36,7.78 5.94,8.5C5.5,9.24 5.25,10 5.11,10.79L3.34,7M20.65,7L18.88,10.79C18.74,10 18.47,9.23 18.05,8.5C17.63,7.78 17.1,7.15 16.5,6.64L20.65,7M12,9C13.63,9 15.07,9.79 16,11C14.55,11.55 12.87,12 12,12C11.13,12 9.45,11.55 8,11C8.93,9.79 10.37,9 12,9M14,13.38C15.56,14.07 16.5,15.13 16.5,16.5C16.5,18.43 10.5,18.43 10.5,16.5C10.5,15.13 11.44,14.07 13,13.38V12H11V13.38C9.64,14.07 8.5,15.21 8.5,16.5C8.5,18.87 13.25,20.13 15.5,18.67C16.09,19.25 16.86,19.5 18,19.5C19.07,19.5 19.95,19.11 20.57,18.5C20.85,18.07 21,17.58 21,17C21,15.84 20.33,14.9 19.38,14.5C18.45,14.12 17.31,14 16,14H15.5C15.8,13.6 16,13.13 16,12.5C16,11.29 15.03,10.33 14,10.1V13.38Z" />
+          </svg>
+        </div>
+        <h2 class="loading-title">Analyzing Weather Data</h2>
+        <p class="loading-text">Crunching numbers and scanning satellites ⏳</p>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </section>
+    </main>
+
+    <main class="main-content hidden">
+      <section>
+        <article class="today-weather-info">
+          <div class="weather-info">
+            <p id="date"></p>
+            <p>
+              <span id="city"></span> <span id="country"></span>
+            </p>
+            <p id="temperature"></p>
+          </div>
+          <div class="weather-icon">
+            <img src="" alt="">
+          </div>
+        </article>
+
+        <article class="weather-forecast">
+          <h2>Today's Forecast</h2>
+          <div class="today-forecast-container">
+          </div>
+        </article>
+
+        <article class="weather-details">
+          <h2>Weather Details</h2>
+          <div class="details-container">
+            <div>
+              <div class="details-item">
+                <div>
+                  <h3>Sunrise</h3>
+                  <p id="sunrise"></p>
+                </div>
+                <div>
+                  <img src="assets/icons/mingcute_sunrise-line.svg" alt="">
+                </div>
+              </div>
+              <div class="details-item">
+                <div>
+                  <h3>Sunset</h3>
+                  <p id="sunset"></p>
+                </div>
+                <div>
+                  <img src="assets/icons/mingcute_sunset-line.svg" alt="">
+                </div>
+              </div>
+              <div class="details-item">
+                <div>
+                  <h3>Chance of rain </h3>
+                  <p id="chance-of-rain"></p>
+                </div>
+                <div>
+                  <img src="assets/icons/material-symbols_water-drop.svg" alt="">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="details-item">
+                <div>
+                  <h3>Wind</h3>
+                  <p id="wind-speed"></p>
+                </div>
+                <div>
+                  <img src="assets/icons/tabler_wind.svg" alt="">
+                </div>
+              </div>
+              <div class="details-item">
+                <div>
+                  <h3>UV index</h3>
+                  <p id="uv-index"></p>
+                </div>
+                <div>
+                  <img src="assets/icons/mingcute_sun-fill.svg" alt="">
+                </div>
+              </div>
+              <div class="details-item">
+                <div>
+                  <h3>Fells like</h3>
+                  <p id="fells-like"></p>
+                </div>
+                <div>
+                  <img src="assets/icons/fluent_temperature-16-filled.svg" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside>
+        <h2>7 Days Forecast</h2>
+        <div class="days7-forecast-container">
+        </div>
+      </aside>
+    </main>
+
+    <main class="error-message hidden">
+      <section>
+        <h2>City not found 🌐</h2>
+        <p>Please try again. 🔎</p>
+      </section>
+    </main>
+
+    <div class="dev-credit">
+      <p>Crafted by <a href="https://3bdulrahmn.vercel.app/" target="_blank" rel="noopener noreferrer"
+          class="dev-link">3bdulrahmn69</a></p>
+    </div>
+  </div>
+
+  <script src="js/script.js" defer></script>
 </body>
 
 </html>
