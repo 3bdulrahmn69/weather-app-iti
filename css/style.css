@@ -457,6 +457,7 @@ aside h2 {
   main {
     flex-direction: column-reverse;
     align-items: center;
+    padding: 0;
   }
   main section {
     width: 100%;
