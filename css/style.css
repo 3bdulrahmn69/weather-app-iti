@@ -119,6 +119,9 @@ header .search .recent {
   align-items: center;
   gap: 8px;
 }
+.recent .recent-item .recent-info > div {
+  margin-left: 14px;
+}
 .recent-city-name {
   color: var(--Gray-900);
   font-size: 16px;
@@ -140,6 +143,9 @@ header .search .recent {
   cursor: pointer;
   letter-spacing: 0.25px;
   transition: opacity 0.3s;
+}
+.recent .recent-item .delete-btn:hover {
+  opacity: 0.7;
 }
 .no-recent p {
   color: var(--Gray-900-60f);

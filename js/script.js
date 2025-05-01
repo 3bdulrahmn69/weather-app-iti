@@ -385,14 +385,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let debounceTimer;
   document.getElementById('search').addEventListener('keyup', (e) => {
-    clearTimeout(debounceTimer); // Clear previous timer
-
+    clearTimeout(debounceTimer);
     const city = e.target.value.trim();
 
     if (city.length >= 3) {
-      debounceTimer = setTimeout(() => {
+      if (e.key === 'Enter') {
         getWeatherData(city);
-      }, 1000); // 1000ms = 1 second
+      } else {
+        debounceTimer = setTimeout(() => {
+          getWeatherData(city);
+        }, 1000); // 1sec debounce
+      }
     }
   });
 
