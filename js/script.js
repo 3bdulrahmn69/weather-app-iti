@@ -391,7 +391,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (city.length >= 3) {
       debounceTimer = setTimeout(() => {
-        console.log('searching for:', city);
         getWeatherData(city);
       }, 1000); // 1000ms = 1 second
     }
@@ -417,7 +416,6 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('recent-list').addEventListener('click', (e) => {
-    console.log(e.target);
     if (e.target.closest('.delete-btn')) {
       const recentItem = e.target.closest('.recent-item');
       const cityName =
