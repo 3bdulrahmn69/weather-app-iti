@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // API Variables
   const weatherApiKey = '7c3880c7508e4fd4a25175621253004';
-  const baseUrl = `http://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}`;
+  const baseUrl = `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}`;
   3;
 
   // Helper functions
@@ -105,6 +105,102 @@ window.addEventListener('DOMContentLoaded', () => {
     document
       .querySelector('.days7-forecast-container')
       .appendChild(forecastBox);
+  };
+
+  const createRecentItem = (city) => {
+    //   <div class="recent-item">
+    //   <div class="recent-info">
+    //     <img src="//cdn.weatherapi.com/weather/64x64/day/113.png" alt="#" class="recent-icon"
+    //       aria-hidden="true">
+    //     <p>Temp</p>
+    //     <div>
+    //       <p>City</p>
+    //       <p>Country</p>
+    //     </div>
+    //   </div>
+    //   <button class="delete-btn" aria-label="Delete recent search">
+    //     <img src="assets/icons/material-symbols_delete-outline.svg" alt="Delete icon">
+    //   </button>
+    // </div>
+    const recentItem = document.createElement('div');
+    recentItem.className = 'recent-item';
+
+    const recentInfo = document.createElement('div');
+    recentInfo.className = 'recent-info';
+
+    const weatherIcon = document.createElement('img');
+    weatherIcon.src = city.icon;
+    weatherIcon.alt = 'weather icon';
+    weatherIcon.className = 'recent-icon';
+    weatherIcon.setAttribute('aria-hidden', 'true');
+    recentInfo.appendChild(weatherIcon);
+
+    const tempElement = document.createElement('p');
+    tempElement.dataset.celsius = `${city.temp.celsius}°`;
+    tempElement.dataset.fahrenheit = `${city.temp.fahrenheit}°`;
+    tempElement.textContent =
+      tempUnit === 'C' ? `${city.temp.celsius}°` : `${city.temp.fahrenheit}°`;
+    recentInfo.appendChild(tempElement);
+
+    const cityInfo = document.createElement('div');
+    const cityElement = document.createElement('p');
+    cityElement.textContent = city.name;
+    cityElement.classList.add('recent-city-name');
+    cityInfo.appendChild(cityElement);
+    const countryElement = document.createElement('p');
+    countryElement.textContent = city.country;
+    countryElement.classList.add('recent-country-name');
+    cityInfo.appendChild(countryElement);
+    recentInfo.appendChild(cityInfo);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.setAttribute('aria-label', 'Delete recent search');
+
+    const deleteIcon = document.createElement('img');
+    deleteIcon.src = 'assets/icons/material-symbols_delete-outline.svg';
+    deleteIcon.alt = 'Delete icon';
+    deleteBtn.appendChild(deleteIcon);
+
+    recentItem.append(recentInfo, deleteBtn);
+    document.getElementById('recent-list').appendChild(recentItem);
+  };
+
+  const saveRecentSearch = (weatherData) => {
+    const recentSearches = JSON.parse(
+      localStorage.getItem('recentSearches') || '[]'
+    );
+    const city = {
+      icon: weatherData.current.condition.icon,
+      name: weatherData.location.name,
+      country: weatherData.location.country,
+      temp: {
+        celsius: weatherData.current.temp_c,
+        fahrenheit: weatherData.current.temp_f,
+      },
+    };
+
+    if (!recentSearches.some((item) => item.name === city.name)) {
+      recentSearches.push(city);
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+    }
+  };
+
+  const loadRecentSearches = () => {
+    const recentSearches = JSON.parse(
+      localStorage.getItem('recentSearches') || '[]'
+    );
+
+    return recentSearches;
+  };
+
+  const openCLoseRecent = (option) => {
+    const recent = document.querySelector('.recent');
+    if (option === 'open') {
+      recent.classList.remove('hidden');
+    } else if (option === 'close') {
+      recent.classList.add('hidden');
+    }
   };
 
   // Initial Data Fetch
@@ -213,6 +309,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const weatherData = JSON.parse(this.responseText);
 
         // Update all UI components
+        saveRecentSearch(weatherData);
         updateTodayWeather(weatherData);
         updateHourlyForecast(weatherData);
         updateWeatherDetails(weatherData);
@@ -269,6 +366,14 @@ window.addEventListener('DOMContentLoaded', () => {
       temp.textContent =
         tempUnit === 'C' ? temp.dataset.celsius : temp.dataset.fahrenheit;
     });
+
+    // Update recent items
+    document
+      .querySelectorAll('.recent-item p[data-celsius]')
+      .forEach((temp) => {
+        temp.textContent =
+          tempUnit === 'C' ? temp.dataset.celsius : temp.dataset.fahrenheit;
+      });
   };
 
   // Event Listeners
@@ -284,6 +389,59 @@ window.addEventListener('DOMContentLoaded', () => {
         getWeatherData(city);
         document.getElementById('search').value = '';
       }
+    }
+  });
+
+  document.getElementById('search').addEventListener('focus', () => {
+    openCLoseRecent('open');
+    const recentSearches = loadRecentSearches();
+
+    if (recentSearches.length > 0) {
+      document.getElementById('recent-list').classList.remove('hidden');
+      document.getElementById('clear-btn').classList.remove('hidden');
+      document.getElementById('no-recent').classList.add('hidden');
+      document.getElementById('recent-list').innerHTML = ''; // Clear previous items
+      recentSearches.forEach((city) => {
+        createRecentItem(city);
+      });
+    } else {
+      document.getElementById('recent-list').classList.add('hidden');
+      document.getElementById('clear-btn').classList.add('hidden');
+      document.getElementById('no-recent').classList.remove('hidden');
+    }
+  });
+
+  document.getElementById('recent-list').addEventListener('click', (e) => {
+    console.log(e.target);
+    if (e.target.closest('.delete-btn')) {
+      const recentItem = e.target.closest('.recent-item');
+      const cityName =
+        recentItem.querySelector('.recent-city-name').textContent;
+      let recentSearches = loadRecentSearches();
+      recentSearches = recentSearches.filter((city) => city.name !== cityName);
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+      recentItem.remove();
+    } else if (e.target.closest('.recent-item')) {
+      const cityName = e.target
+        .closest('.recent-item')
+        .querySelector('.recent-city-name').textContent;
+      getWeatherData(cityName);
+      openCLoseRecent('close');
+    }
+  });
+
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    localStorage.removeItem('recentSearches');
+    document.getElementById('recent-list').innerHTML = '';
+    document.getElementById('recent-list').classList.add('hidden');
+    document.getElementById('clear-btn').classList.add('hidden');
+    document.getElementById('no-recent').classList.remove('hidden');
+    openCLoseRecent('close');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.recent') && !e.target.closest('#search')) {
+      openCLoseRecent('close');
     }
   });
 });

@@ -65,8 +65,19 @@
         <span>Weather App</span>
       </div>
       <div class="search" role="search">
-        <input type="text" name="search" id="search" placeholder="Search for a city..."
+        <input type="text" autocomplete="off" name="search" id="search" placeholder="Search for a city..."
           aria-label="Enter city name for weather search">
+        <div class="recent hidden">
+          <div class="recent-header" role="group" aria-labelledby="recent-label">
+            <span class="recent-label">Recent</span>
+            <button class="clear-btn hidden" id="clear-btn" aria-label="Clear recent searches">Clear all</button>
+          </div>
+          <div class="recent-list hidden" id="recent-list" role="listbox" aria-label="Recent searches">
+          </div>
+          <div class="no-recent " id="no-recent" role="alert" aria-live="assertive">
+            <p>You have no recent locations</p>
+          </div>
+        </div>
       </div>
       <div class="toggle-container" role="group" aria-labelledby="temp-unit-label">
         <span id="temp-unit-label" hidden>Temperature Unit Toggle</span>

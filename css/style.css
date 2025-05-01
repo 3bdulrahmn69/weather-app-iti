@@ -62,15 +62,83 @@ header .search input[type='text'] {
   font-size: 16px;
   font-weight: 400;
 }
+header .search input[type='text']:focus {
+  outline: solid 2px var(--Indigo-400);
+}
 header .search .recent {
   position: absolute;
-  top: 100%;
+  top: 110%;
   left: 0;
   width: 100%;
   background-color: var(--Indigo-50);
   border-radius: 8px 8px 0 0;
   padding: 8px;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+}
+.search .recent .recent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.search .recent .recent-label {
+  color: var(--Gray-900);
+  font-size: 21px;
+  letter-spacing: 0.25px;
+  font-weight: 600;
+}
+.search .recent .clear-btn {
+  border: none;
+  background: none;
+  color: var(--Indigo-400);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.25px;
+  transition: opacity 0.3s;
+}
+.search .recent .clear-btn:hover {
+  opacity: 0.7;
+}
+.search .recent .recent-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+.recent .recent-item .recent-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.recent-city-name {
+  color: var(--Gray-900);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+}
+.recent-country-name {
+  color: var(--Gray-900-60f);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+}
+.recent .recent-item .delete-btn {
+  border: none;
+  background: none;
+  color: var(--Indigo-400);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.25px;
+  transition: opacity 0.3s;
+}
+.no-recent p {
+  color: var(--Gray-900-60f);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
 }
 
 .toggle {
@@ -345,6 +413,7 @@ aside h2 {
   .container {
     width: 100%;
     padding: 16px;
+    padding-bottom: 60px;
   }
 
   header {
@@ -585,7 +654,7 @@ aside h2 {
     transform: scale(0);
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .dev-credit {
     bottom: 10px;
     left: 10px;
