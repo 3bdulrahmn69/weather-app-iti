@@ -403,7 +403,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const getCitySuggestions = (query) => {
     return new Promise((resolve, reject) => {
-      fetch('../data/cities.json')
+      fetch('cities.json')
         .then((response) => response.json())
         .then((data) => {
           const suggestions = data.filter((city) =>
