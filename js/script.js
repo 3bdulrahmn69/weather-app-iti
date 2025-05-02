@@ -166,6 +166,19 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('recent-list').appendChild(recentItem);
   };
 
+  const createSuggestionItem = (city) => {
+    const suggestionItem = document.createElement('div');
+    suggestionItem.className = 'suggestion-item';
+    suggestionItem.textContent = city;
+    suggestionItem.addEventListener('click', () => {
+      document.getElementById('search').value = city;
+      getWeatherData(city);
+      openCloseSuggestion('close');
+    });
+
+    document.getElementById('suggestion-list').appendChild(suggestionItem);
+  };
+
   const saveRecentSearch = (weatherData) => {
     const recentSearches = JSON.parse(
       localStorage.getItem('recentSearches') || '[]'
@@ -202,6 +215,15 @@ window.addEventListener('DOMContentLoaded', () => {
       recent.classList.remove('hidden');
     } else if (option === 'close') {
       recent.classList.add('hidden');
+    }
+  };
+
+  const openCloseSuggestion = (option) => {
+    const suggestion = document.querySelector('.suggestion');
+    if (option === 'open') {
+      suggestion.classList.remove('hidden');
+    } else if (option === 'close') {
+      suggestion.classList.add('hidden');
     }
   };
 
@@ -379,25 +401,52 @@ window.addEventListener('DOMContentLoaded', () => {
       });
   };
 
+  const getCitySuggestions = (query) => {
+    return new Promise((resolve, reject) => {
+      fetch('../data/cities.json')
+        .then((response) => response.json())
+        .then((data) => {
+          const suggestions = data.filter((city) =>
+            city.toLowerCase().includes(query.toLowerCase())
+          );
+          resolve(suggestions);
+        })
+        .catch((error) => {
+          console.error('Error fetching city suggestions:', error);
+          reject(error);
+        });
+    });
+  };
+
   // Event Listeners
   document.getElementById('temp-toggle').addEventListener('change', () => {
     tempUnit = document.getElementById('temp-toggle').checked ? 'C' : 'F';
     updateAllTemperatures();
   });
 
-  let debounceTimer;
   document.getElementById('search').addEventListener('keyup', (e) => {
-    clearTimeout(debounceTimer);
     const city = e.target.value.trim();
 
-    if (city.length >= 3) {
-      if (e.key === 'Enter') {
-        getWeatherData(city);
-      } else {
-        debounceTimer = setTimeout(() => {
-          getWeatherData(city);
-        }, 1000); // 1sec debounce
-      }
+    if (city.length > 0) {
+      openCLoseRecent('close');
+      openCloseSuggestion('open');
+      const suggestions = async () => {
+        const data = await getCitySuggestions(city);
+
+        document.getElementById('suggestion-list').innerHTML = ''; // Clear previous suggestions
+
+        if (data.length > 0) {
+          data.slice(0, 7).forEach((city) => {
+            createSuggestionItem(city);
+          });
+          document.getElementById('suggestion-list').classList.remove('hidden');
+        } else {
+          document.getElementById('suggestion-list').classList.add('hidden');
+        }
+      };
+      suggestions();
+    } else {
+      openCLoseRecent('open');
     }
   });
 
@@ -450,6 +499,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.recent') && !e.target.closest('#search')) {
       openCLoseRecent('close');
+      openCloseSuggestion('close');
     }
   });
 });

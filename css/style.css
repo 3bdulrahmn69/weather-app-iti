@@ -65,7 +65,8 @@ header .search input[type='text'] {
 header .search input[type='text']:focus {
   outline: solid 2px var(--Indigo-400);
 }
-header .search .recent {
+header .search .recent,
+header .search .suggestion-list {
   position: absolute;
   top: 110%;
   left: 0;
@@ -81,12 +82,24 @@ header .search .recent {
   align-items: center;
   margin-bottom: 16px;
 }
-.search .recent .recent-list {
+.search .recent .recent-list,
+header .search .suggestion-list {
   max-height: 200px;
   overflow-y: auto;
   padding-right: 8px;
   scrollbar-width: thin;
   scrollbar-color: var(--Indigo-400) var(--White-8f);
+}
+.suggestion-list .suggestion-item {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--Gray-900);
+  letter-spacing: 0.15px;
+  padding: 8px;
+  cursor: pointer;
+}
+.suggestion-list .suggestion-item:hover {
+  text-decoration: underline;
 }
 .search .recent .recent-label {
   color: var(--Gray-900);
