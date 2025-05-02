@@ -180,10 +180,12 @@ window.addEventListener('DOMContentLoaded', () => {
       },
     };
 
-    if (!recentSearches.some((item) => item.name === city.name)) {
-      recentSearches.push(city);
-      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
-    }
+    // Remove any existing entry with the same city name
+    const updatedSearches = recentSearches.filter(
+      (item) => item.name !== city.name
+    );
+    updatedSearches.push(city);
+    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
   };
 
   const loadRecentSearches = () => {
@@ -408,7 +410,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('clear-btn').classList.remove('hidden');
       document.getElementById('no-recent').classList.add('hidden');
       document.getElementById('recent-list').innerHTML = ''; // Clear previous items
-      recentSearches.forEach((city) => {
+      recentSearches.reverse().forEach((city) => {
         createRecentItem(city);
       });
     } else {
