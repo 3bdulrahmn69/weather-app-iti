@@ -5,7 +5,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // API Variables
   const weatherApiKey = '7c3880c7508e4fd4a25175621253004';
   const baseUrl = `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}`;
-  3;
 
   // Helper functions
   const formatPrettyDate = (dateString, monthFormat = 'short') => {
