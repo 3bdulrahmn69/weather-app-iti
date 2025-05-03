@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
   3;
 
   // Helper functions
-  const formatPrettyDate = (dateString) => {
+  const formatPrettyDate = (dateString, monthFormat = 'short') => {
     const date = new Date(dateString);
     const day = date.getDate();
 
@@ -27,10 +27,21 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     const ordinalDay = getOrdinal(day);
-    const month = date.toLocaleString('en-US', { month: 'short' });
+    const month = date.toLocaleString('en-US', { month: monthFormat });
     const weekday = date.toLocaleString('en-US', { weekday: 'long' });
 
     return `${ordinalDay} ${month}, ${weekday}`;
+  };
+
+  const formatTime = (timeString) => {
+    const [hourStr, minuteStr] = timeString.split(':');
+    let hour = parseInt(hourStr, 10);
+    const minute = parseInt(minuteStr, 10);
+    const period = hour >= 12 ? 'PM' : 'AM';
+
+    hour = hour % 12 || 12;
+
+    return `${hour}:${minute.toString().padStart(2, '0')} ${period}`;
   };
 
   const createHourlyForecastBox = (hour, tempC, tempF, icon, tempUnit) => {
@@ -38,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
     forecastBox.className = 'forecast-item';
 
     const time = document.createElement('p');
-    time.textContent = hour;
+    time.textContent = formatTime(hour);
     forecastBox.appendChild(time);
 
     const weatherIcon = document.createElement('img');
@@ -136,6 +147,7 @@ window.addEventListener('DOMContentLoaded', () => {
     recentInfo.appendChild(weatherIcon);
 
     const tempElement = document.createElement('p');
+    tempElement.className = 'recent-temp';
     tempElement.dataset.celsius = `${city.temp.celsius}°`;
     tempElement.dataset.fahrenheit = `${city.temp.fahrenheit}°`;
     tempElement.textContent =
@@ -228,7 +240,6 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   // Initial Data Fetch
-
   const updateTodayWeather = (weatherData) => {
     document.getElementById('date').textContent = formatPrettyDate(
       weatherData.location.localtime
@@ -294,10 +305,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.days7-forecast-container');
     container.innerHTML = ''; // Clear previous forecast
     weatherData.forecast.forecastday.slice(1).forEach((dayData) => {
-      const date = formatPrettyDate(dayData.date).split(',')[0];
-      const day = new Date(dayData.date).toLocaleString('en-US', {
-        weekday: 'long',
-      });
+      const [date, day] = formatPrettyDate(dayData.date, 'long').split(',');
       createForecastBox(
         date,
         day,
@@ -334,6 +342,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const weatherData = JSON.parse(this.responseText);
 
         // Update all UI components
+        document.getElementById('search').value = weatherData.location.name;
+        document.getElementById('search').blur();
+        openCloseSuggestion('close');
         saveRecentSearch(weatherData);
         updateTodayWeather(weatherData);
         updateHourlyForecast(weatherData);
@@ -431,17 +442,24 @@ window.addEventListener('DOMContentLoaded', () => {
       openCLoseRecent('close');
       openCloseSuggestion('open');
       const suggestions = async () => {
-        const data = await getCitySuggestions(city);
+        const suggestion = await getCitySuggestions(city);
 
         document.getElementById('suggestion-list').innerHTML = ''; // Clear previous suggestions
 
-        if (data.length > 0) {
-          data.slice(0, 7).forEach((city) => {
+        if (city.length >= 3) {
+          if (e.key === 'Enter') {
+            getWeatherData(city);
+            openCloseSuggestion('close');
+          }
+        }
+
+        if (suggestion.length > 0) {
+          suggestion.slice(0, 7).forEach((city) => {
             createSuggestionItem(city);
           });
-          document.getElementById('suggestion-list').classList.remove('hidden');
+          openCloseSuggestion('open');
         } else {
-          document.getElementById('suggestion-list').classList.add('hidden');
+          openCloseSuggestion('close');
         }
       };
       suggestions();
@@ -500,6 +518,14 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!e.target.closest('.recent') && !e.target.closest('#search')) {
       openCLoseRecent('close');
       openCloseSuggestion('close');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      openCLoseRecent('close');
+      openCloseSuggestion('close');
+      document.getElementById('search').blur();
     }
   });
 });
