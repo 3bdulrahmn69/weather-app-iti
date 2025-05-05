@@ -361,13 +361,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    data.onerror = function () {
-      // Handle network errors
-      console.error('Network error');
-      loading.classList.add('hidden');
-      error.classList.remove('hidden');
-    };
-
     data.send();
   };
 
